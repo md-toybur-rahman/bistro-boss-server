@@ -120,11 +120,27 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updateDoc);
             res.send(result)
         })
-
+        
+        // menu related apis
         app.get('/menu', async (req, res) => {
             const result = await menuCollection.find().toArray();
             res.send(result)
         })
+
+        app.post('/menu', async(req, res) => {
+            const newItem = req.body;
+            const result = await menuCollection.insertOne(newItem)
+            res.send(result)
+        })
+
+
+        app.delete('/menu/:id', verifyJWT, verifyAdmin, async(req, res) => {
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await menuCollection.deleteOne(query);
+            res.send(result)
+        })
+
 
         // review related apis
         app.get('/reviews', async (req, res) => {
